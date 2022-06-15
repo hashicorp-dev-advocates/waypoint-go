@@ -13,7 +13,7 @@ runner {
   }
 }
 
-app "example" {
+app "example-deployment" {
   build {
     use "docker" {}
 
