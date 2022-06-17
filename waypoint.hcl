@@ -34,3 +34,60 @@ app "example-deployment" {
   release {
   }
 }
+
+app "release" {
+  build {
+    use "consul-release-controller" {
+      releaser {
+        plugin_name = consul
+        config {
+          consul_service = "api"
+        }
+      }
+      runtime {
+        plugin_name = "ecs"
+        config {
+          deployment = "api-deployment"
+          namespace  = "default"
+        }
+      }
+      strategy {
+        plugin_name = "canary"
+        config {
+          initial_delay   = "30s"
+          interval        = "30s"
+          initial_traffic = 10
+          traffic_step    = 40
+          max_traffic     = 100
+          error_threshold = 5
+        }
+      }
+      monitor {
+        plugin_name = "prometheus"
+        config {
+          address = "http://localhost:9090"
+          queries = [
+            {
+              name   = "request-success"
+              preset = "envoy-request-success"
+              min    = 99
+            },
+            {
+              name   = "request-duration"
+              preset = "envoy-request-duration"
+              min    = 20
+              max    = 200
+            }
+          ]
+        }
+      } 
+    }
+  }
+  // added because waypoint wouldn't initialize without it
+  deploy {
+    use "nomad" {
+      datacenter = "dc1"
+    }
+  }
+}
+ 
