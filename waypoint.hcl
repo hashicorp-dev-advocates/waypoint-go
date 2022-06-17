@@ -76,7 +76,7 @@ app "release" {
               name   = "request-duration"
               preset = "envoy-request-duration"
               min    = 20
-              max    = 200
+              max    = 2000
             }
           ]
         }
