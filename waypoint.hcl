@@ -32,6 +32,5 @@ app "example-deployment" {
   }
 
   release {
-    
   }
 }
