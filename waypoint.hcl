@@ -26,8 +26,7 @@ app "example-deployment" {
   }
 
   deploy {
-    use "nomad" {
-      datacenter = "dc1"
+    use "noop" {
     }
   }
 
